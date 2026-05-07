@@ -9,22 +9,26 @@ namespace WeatherAPI.Controllers
    public class TemperatureController : ControllerBase
    {
       private readonly IWeatherService _weatherService;
+      private readonly ILogger<TemperatureController> _logger;
 
-      public TemperatureController(IWeatherService weatherService)
+      public TemperatureController(IWeatherService weatherService, ILogger<TemperatureController> logger)
       {
          _weatherService = weatherService;
+         _logger = logger;
       }
 
-      [HttpGet("{city}")]
-      public async Task<IActionResult> GetTemperature(int city)
+      [HttpGet("{cityId}")]
+      public async Task<IActionResult> GetTemperature(int cityId)
       {
+         _logger.LogInformation("{date} - GET request for temperature of cityId {CityId}", DateTime.UtcNow, cityId);
          try
          {
-            var result = await _weatherService.GetTemperatureAsync(city);
+            var result = await _weatherService.GetTemperatureAsync(cityId);
             return Ok(result);
          }
          catch (Exception ex)
          {
+            _logger.LogError(ex, "Error occurred while fetching temperature for cityId {CityId}", cityId);
             return BadRequest(ex.Message);
          }
       }

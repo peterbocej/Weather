@@ -9,11 +9,11 @@ namespace WeatherAPI.Services
    public class WeatherService : IWeatherService
    {
 
-      public async Task<TemperatureResult> GetTemperatureAsync(int city)
+      public async Task<TemperatureResult> GetTemperatureAsync(int cityId)
       {
-         if (city < 1 || city > 4)
+         if (cityId < 1 || cityId > 4)
          {
-            throw new ArgumentOutOfRangeException(nameof(city), "City ID must be between 1 and 4.");
+            throw new ArgumentOutOfRangeException(nameof(cityId), "City ID must be between 1 and 4.");
          }
          // Simulate fetching temperature data for the specified city
          var random = new Random();
