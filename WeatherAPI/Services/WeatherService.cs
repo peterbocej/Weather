@@ -11,6 +11,8 @@ namespace WeatherAPI.Services
    {
       private readonly IConfiguration _configuration;
       private readonly IDictionary<int, string> _cities;
+      private readonly string? _url;
+      private readonly string? _apiKey;
       public WeatherService(IConfiguration configuration)
       {
          _configuration = configuration;
@@ -21,17 +23,17 @@ namespace WeatherAPI.Services
             { 3, "budapest" },
             { 4, "vienna" }
          };
+         _url = _configuration.GetValue<string>("Server:Url");
+         _apiKey = _configuration.GetValue<string>("Server:ApiKey");
       }
       public async Task<TemperatureResult> GetTemperatureAsync(int cityId)
       {
          if (!_cities.ContainsKey(cityId))
-         {
-            throw new ArgumentOutOfRangeException(nameof(cityId), "Invalid city ID.");
-         }
-         var url = _configuration.GetValue<string>("Server:Url");
-         var apiKey = _configuration.GetValue<string>("Server:ApiKey");
+            throw new ArgumentOutOfRangeException(nameof(cityId), "Invalid city ID (1 - 4).");
+
          var cityName = _cities[cityId];
-         var requestUrl = string.Format(url!, apiKey, cityName);
+         var requestUrl = string.Format(_url!, _apiKey, cityName);
+         var semafore = new SemaphoreSlim(0, 3);
          using (var client = new HttpClient())
          {
             var response = await client.GetAsync(requestUrl);
@@ -43,18 +45,16 @@ namespace WeatherAPI.Services
             if (dict != null && dict.ContainsKey("current"))
             {
                var current = dict["current"] as JsonElement?;
+               if (current == null || !current.HasValue)
+                  throw new Exception("Current weather data not found in API response.");
 
-               if (current.HasValue && current.Value.TryGetProperty("temp_c", out var tempC))
-                  temperatureC = tempC.GetDouble();
+               if (current.Value.TryGetProperty("temp_c", out var temp_c))
+                  temperatureC = temp_c.GetDouble();
                else
                   throw new Exception("Temperature data not found in API response.");
 
-               if (current.HasValue 
-                  && current.Value.TryGetProperty("last_updated", out var val) 
-                  && val.ValueKind == JsonValueKind.String 
-                  && DateTime.TryParse(val.GetString(), out var parsedDate))
-                  lastUpdated = parsedDate;
-               else
+               if (!(current.Value.TryGetProperty("last_updated", out var last_updated)
+                  && DateTime.TryParse(last_updated.GetString(), out lastUpdated)))
                   throw new Exception("Last updated data not found in API response.");
                
                return new TemperatureResult

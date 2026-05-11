@@ -18,7 +18,7 @@ namespace WeatherAPI.Controllers
       }
 
       [HttpGet("{cityId}")]
-      public async Task<IActionResult> GetTemperature(int cityId)
+      public async Task<IActionResult> GetCityTemperature(int cityId)
       {
          _logger.LogInformation("{date} - GET request for temperature of cityId {CityId}", DateTime.UtcNow, cityId);
          try
