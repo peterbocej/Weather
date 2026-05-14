@@ -7,7 +7,7 @@ namespace WeatherAPI.Services
 {
    public interface IJwtService
    {
-      string GenerateToken(string username);
+      string GenerateToken(string username, string password);
    }
    public class JwtService : IJwtService
    {
@@ -17,7 +17,7 @@ namespace WeatherAPI.Services
          _config = config;
       }
 
-      public string GenerateToken(string username)
+      public string GenerateToken(string username, string password)
       {
          var claims = new[]
          {

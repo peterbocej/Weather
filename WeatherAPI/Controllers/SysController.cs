@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 
@@ -6,6 +7,7 @@ namespace WeatherAPI.Controllers
 {
    [Route("api/[controller]")]
    [ApiController]
+   [Authorize]
    public class SysController : ControllerBase
    {
       [HttpGet]
@@ -17,6 +19,16 @@ namespace WeatherAPI.Controllers
             Assembly.GetEntryAssembly()?.GetName().Version,
             Clr = Environment.Version.ToString(),
             OperatingSystem = Environment.OSVersion
+         }));
+      }
+      [HttpGet("about")]
+      [AllowAnonymous]
+      public async Task<IActionResult> About()
+      {
+         return Ok(await Task.FromResult(new
+         {
+            Title = Assembly.GetEntryAssembly()?.GetName().Name,
+            Assembly = Assembly.GetEntryAssembly()?.GetName().Version
          }));
       }
    }
