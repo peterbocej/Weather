@@ -11,7 +11,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddLogging(o => o.AddConsole());
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IWeatherService, WeatherService>();
+builder.Services.AddSingleton<IWeatherService, WeatherService>();
 
 var app = builder.Build();
 

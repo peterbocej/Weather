@@ -4,7 +4,9 @@ namespace WeatherAPI.Models
 {
    public class TemperatureResult
    {
-      public double TemperatureC { get; set; }
-      public string MeasuredAtUtc { get; set; } = string.Empty;
+      public int Id { get; set; }
+      public string City { get; set; } = string.Empty;
+      public double? TemperatureC { get; set; }
+      public DateTime? MeasuredAtUtc { get; set; }
    }
 }
