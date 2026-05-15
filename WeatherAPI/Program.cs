@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 using System.Text;
 using WeatherAPI.Services;
 
@@ -13,28 +15,41 @@ builder.Services.AddOpenApi();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddLogging(o => o.AddConsole());
 builder.Services.AddSingleton<IWeatherService, WeatherService>();
-builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<IJwtService, JwtService>();
-builder.Services.AddAuthentication(options =>
-{
-   options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-   options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-   .AddJwtBearer(options =>
-{
-   options.TokenValidationParameters = new TokenValidationParameters
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+builder.Services.AddAuthentication("Bearer")
+   .AddJwtBearer("Bearer", options =>
    {
-      ValidateIssuer = true,
-      ValidateAudience = true,
-      ValidateLifetime = true,
-      ValidateIssuerSigningKey = true,
-      ValidIssuer = builder.Configuration["Jwt:Issuer"],
-      ValidAudience = builder.Configuration["Jwt:Audience"],
-      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
-   };
-});
+      options.TokenValidationParameters = new TokenValidationParameters
+      {
+         ValidateIssuer = true,
+         ValidateAudience = true,
+         ValidateLifetime = true,
+         ValidateIssuerSigningKey = true,
+         ValidIssuer = jwtSettings["Issuer"],
+         ValidAudience = jwtSettings["Audience"],
+         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]!))
+      };
+   });
 builder.Services.AddAuthorization();
+
+builder.Services.AddSwaggerGen(c =>
+{
+   c.SwaggerDoc("v1", new OpenApiInfo { Title = "WeatherAPI", Version = "v1" });
+   c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+   {
+      Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+      Name = "Authorization",
+      In = ParameterLocation.Header,
+      Type = SecuritySchemeType.ApiKey,
+      Scheme = "Bearer",
+      BearerFormat = "JWT"
+   });
+   c.AddSecurityRequirement(document => new()
+   {
+      [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+   });
+});
 
 var app = builder.Build();
 
