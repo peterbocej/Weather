@@ -1,0 +1,72 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using WeatherAPI.Models;
+using WeatherAPI.Services;
+
+namespace WeatherAPI.Controllers
+{
+   [Route("api/[controller]")]
+   [ApiController]
+   public class AuthController : ControllerBase
+   {
+      private readonly IConfiguration _config;
+      private readonly ILogger<AuthController> _logger;
+      public AuthController(IConfiguration config, ILogger<AuthController> logger)
+      {
+         _config = config;
+         _logger = logger;
+      }
+
+      [HttpPost("login")]
+      public IActionResult Login([FromBody] LoginRequest request)
+      {
+         if (!ValidateUser(request.User, request.Password))
+         {
+            _logger.LogWarning("Invalid login attempt for user {user}", request.User);
+            return Unauthorized();
+         }
+
+         var token = GenerateToken(request.User, request.Password);
+         if (token == null)
+         {
+            _logger.LogWarning("Invalid login attempt for user {user}", request.User);
+            return Unauthorized();
+         }
+
+         _logger.LogInformation("User {user} logged in successfully", request.User);
+         return Ok(token);
+      }
+
+      private bool ValidateUser(string username, string password)
+      {
+         foreach (var user in _config.GetSection("Users").GetChildren())
+            if (user["Username"] == username && user["Password"] == password)
+               return true;
+
+         return false;
+      }
+
+      private string GenerateToken(string user, string password)
+      {
+         var claims = new[]
+         {
+            new Claim(ClaimTypes.Name, user)
+         };
+         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+         var token = new JwtSecurityToken(
+             issuer: _config["Jwt:Issuer"],
+             audience: _config["Jwt:Audience"],
+             claims: claims,
+             expires: DateTime.Now.AddHours(1),
+             signingCredentials: creds
+         );
+
+         return new JwtSecurityTokenHandler().WriteToken(token);
+      }
+   }
+}
