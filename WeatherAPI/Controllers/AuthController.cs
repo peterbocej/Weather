@@ -3,8 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using WeatherAPI.Models;
-using WeatherAPI.Services;
+using WeatherAPI.Domain.DTO;
 
 namespace WeatherAPI.Controllers
 {
@@ -51,9 +50,12 @@ namespace WeatherAPI.Controllers
 
       private string GenerateToken(string user, string password)
       {
+         var role = _config.GetSection("Users").GetChildren()
+            .FirstOrDefault(u => u["Username"] == user)?["Role"];
          var claims = new[]
          {
-            new Claim(ClaimTypes.Name, user)
+            new Claim(ClaimTypes.Name, user),
+            new Claim(ClaimTypes.Role, role ?? string.Empty)
          };
          var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
          var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

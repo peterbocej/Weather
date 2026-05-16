@@ -1,9 +1,7 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using System.Text;
-using WeatherAPI.Services;
+using WeatherAPI.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
