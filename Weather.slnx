@@ -1,5 +1,5 @@
 <Solution>
-  <Project Path="../WeatherAPI.Domain/WeatherAPI.Domain.csproj" Id="aca3db09-76d7-40ef-a62d-e0f7dfd0c429" />
-  <Project Path="../WeatherAPI.Infrastructure/WeatherAPI.Infrastructure.csproj" Id="971ed134-085a-43bf-8529-56a6ea0f9e10" />
+  <Project Path="WeatherAPI.Domain/WeatherAPI.Domain.csproj" />
+  <Project Path="WeatherAPI.Infrastructure/WeatherAPI.Infrastructure.csproj" />
   <Project Path="WeatherAPI/WeatherAPI.csproj" />
 </Solution>

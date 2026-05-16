@@ -6,7 +6,7 @@ namespace WeatherAPI.Controllers
 {
    [Route("api/[controller]")]
    [ApiController]
-   [Authorize(Roles = "Admin")]
+   [Authorize(Roles = "Administrator")]
    public class SysController : ControllerBase
    {
       [HttpGet]

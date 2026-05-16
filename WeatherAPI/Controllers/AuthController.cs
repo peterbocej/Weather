@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Xml.Linq;
 using WeatherAPI.Domain.DTO;
 
 namespace WeatherAPI.Controllers
@@ -17,6 +19,16 @@ namespace WeatherAPI.Controllers
       {
          _config = config;
          _logger = logger;
+      }
+
+      [HttpGet("user")]
+      [Authorize]
+      public IActionResult GetUser()
+      {
+         return Ok(new
+         {
+            User.Identity?.Name
+         });
       }
 
       [HttpPost("login")]
@@ -41,11 +53,23 @@ namespace WeatherAPI.Controllers
 
       private bool ValidateUser(string username, string password)
       {
+         if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+         { 
+            _logger.LogWarning("Username or password is empty");
+            return false;
+         }
+         var hashedPassword = HashPassword(password);
          foreach (var user in _config.GetSection("Users").GetChildren())
-            if (user["Username"] == username && user["Password"] == password)
+            if (user["Username"] == username && user["Password"] == hashedPassword)
                return true;
 
          return false;
+      }
+
+      private string? HashPassword(string password)
+      {
+         // For demonstration purposes only. In production, use a secure hashing algorithm like bcrypt or Argon2.
+         return password;
       }
 
       private string GenerateToken(string user, string password)
@@ -68,7 +92,8 @@ namespace WeatherAPI.Controllers
              signingCredentials: creds
          );
 
-         return new JwtSecurityTokenHandler().WriteToken(token);
+         var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+         return $"Bearer {tokenString}";
       }
    }
 }
