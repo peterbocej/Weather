@@ -1,8 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.Json;
 using WeatherAPI.Domain.Models;
 
@@ -58,7 +55,7 @@ namespace WeatherAPI.Infrastructure.ExternalApi
                   _logger.LogError("Last updated data not found in API response for city: {CityName}", cityName);
                   throw new Exception("Last updated data not found in API response.");
                }
-               temperatureResult.MeasuredAtUtc = lastUpdated;
+               temperatureResult.MeasuredAtUTC = lastUpdated.ToUniversalTime();
                return true;
             }
             else

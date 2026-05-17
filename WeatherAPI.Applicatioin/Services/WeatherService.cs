@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using System.Text.Json;
+﻿using Microsoft.Extensions.Logging;
 using WeatherAPI.Domain.Models;
 using WeatherAPI.Infrastructure.ExternalApi;
 using WeatherAPI.Infrastructure.Repository;
@@ -17,8 +15,8 @@ namespace WeatherAPI.Application.Services
       private readonly IExternalWeatherApi _externalWeatherApi;
       private readonly ILogger<WeatherService> _logger;
       public WeatherService(
-         ITemperatureResultRepository temperatureResultRepository, 
-         ILogger<WeatherService> logger, 
+         ITemperatureResultRepository temperatureResultRepository,
+         ILogger<WeatherService> logger,
          IExternalWeatherApi externalWeatherApi)
       {
          _temperatureResultRepository = temperatureResultRepository;
@@ -59,14 +57,13 @@ namespace WeatherAPI.Application.Services
          var today9AM = DateTime.UtcNow.Date.AddHours(9);
          var today4PM = DateTime.UtcNow.Date.AddHours(16);
          var currentTime = DateTime.UtcNow;
-
-         if (temperatureResult.MeasuredAtUtc == null || temperatureResult.TemperatureC == null)
+         if (temperatureResult.MeasuredAtUTC == null || temperatureResult.TemperatureC == null)
             return false;
-         var measuredAt = temperatureResult.MeasuredAtUtc.Value;
+         var measuredAt = temperatureResult.MeasuredAtUTC.Value;
 
-         if (measuredAt >= today9AM && measuredAt <= today4PM)
+         if (currentTime >= today9AM && currentTime <= today4PM && measuredAt >= today9AM)
             return true;
-         else if (currentTime >= today4PM)
+         else if (currentTime >= today4PM && currentTime < today9AM.AddDays(1) && measuredAt >= today4PM)
             return true;
 
          return false;

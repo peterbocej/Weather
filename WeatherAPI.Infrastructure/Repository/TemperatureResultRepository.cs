@@ -1,8 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using WeatherAPI.Domain.Models;
 using WeatherAPI.Infrastructure.Data;
 
