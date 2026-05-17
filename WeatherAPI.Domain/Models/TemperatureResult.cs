@@ -1,8 +1,13 @@
-﻿namespace WeatherAPI.Domain.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace WeatherAPI.Domain.Models
 {
    public class TemperatureResult
    {
-      public int Id { get; set; }
+      [Key]
+      [DatabaseGenerated(DatabaseGeneratedOption.None)]
+      public int TemperatureResultId { get; set; }
       public string City { get; set; } = string.Empty;
       public double? TemperatureC { get; set; }
       public DateTime? MeasuredAtUtc { get; set; }

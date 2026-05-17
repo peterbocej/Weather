@@ -1,4 +1,4 @@
-﻿namespace WeatherAPI.Domain.DTO
+﻿namespace WeatherAPI.Application.DTO
 {
    public class LoginRequest
    {

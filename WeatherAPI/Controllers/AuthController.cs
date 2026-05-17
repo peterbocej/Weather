@@ -4,13 +4,13 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Xml.Linq;
-using WeatherAPI.Domain.DTO;
+using WeatherAPI.Application.DTO;
 
 namespace WeatherAPI.Controllers
 {
    [Route("api/[controller]")]
    [ApiController]
+   [Authorize]
    public class AuthController : ControllerBase
    {
       private readonly IConfiguration _config;
@@ -22,7 +22,6 @@ namespace WeatherAPI.Controllers
       }
 
       [HttpGet("user")]
-      [Authorize]
       public IActionResult GetUser()
       {
          return Ok(new
@@ -32,6 +31,7 @@ namespace WeatherAPI.Controllers
       }
 
       [HttpPost("login")]
+      [AllowAnonymous]
       public IActionResult Login([FromBody] LoginRequest request)
       {
          if (!ValidateUser(request.User, request.Password))
@@ -54,7 +54,7 @@ namespace WeatherAPI.Controllers
       private bool ValidateUser(string username, string password)
       {
          if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
-         { 
+         {
             _logger.LogWarning("Username or password is empty");
             return false;
          }

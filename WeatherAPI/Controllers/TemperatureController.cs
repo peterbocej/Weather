@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
-using WeatherAPI.Infrastructure.Services;
+using WeatherAPI.Application.Services;
 
 namespace WeatherAPI.Controllers
 {

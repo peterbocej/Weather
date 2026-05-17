@@ -1,7 +1,11 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using System.Text;
-using WeatherAPI.Infrastructure.Services;
+using WeatherAPI.Application.Services;
+using WeatherAPI.Infrastructure.Data;
+using WeatherAPI.Infrastructure.ExternalApi;
+using WeatherAPI.Infrastructure.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,9 +14,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+builder.Services.Configure<IConfiguration>(builder.Configuration);
 builder.Services.AddLogging(o => o.AddConsole());
-builder.Services.AddSingleton<IWeatherService, WeatherService>();
+builder.Services.AddDbContext<CacheDbContext>(options =>
+   options.UseSqlite(builder.Configuration.GetConnectionString("WeatherCache")), ServiceLifetime.Scoped);
+builder.Services.AddScoped<ITemperatureResultRepository, TemperatureResultRepository>();
+builder.Services.AddScoped<IExternalWeatherApi, ExternalWeatherApi>();
+builder.Services.AddScoped<IWeatherService, WeatherService>();
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 builder.Services.AddAuthentication("Bearer")
@@ -50,6 +58,12 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+   var dbContext = scope.ServiceProvider.GetRequiredService<CacheDbContext>();
+   dbContext.Database.EnsureCreated();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
