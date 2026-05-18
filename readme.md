@@ -12,13 +12,12 @@ to users in a simple and efficient manner.
 
 [net-zadanie-2026.pdf](file:///net-zadanie-2026.pdf): in slovak language, contains the task description and requirements for the project.
 
-## Installation
-### Get
+## Get
 To get the project, you can clone the repository from GitHub using the following command:
 ```bash
 git clone https://github.com/peterbocej/Weather.git
 ```
-### Solution items
+## Solution items
 ![Solution projects](./img/solution.png)
 * #### WeatherAPI
 This is the main project of the solution, which contains the API implementation.
@@ -28,12 +27,12 @@ This project contains the application logic and services used by the API.
 This project contains the domain models and entities used in the application.
 * #### WeatherAPI.Infrastructure
 This project contains the infrastructure code, such as database access and external API integrations.
-### Prepare
+## Prepare
 To prepare the project for development, you need to have .NET 10.0 SDK installed on your machine.
 
 1. Open Weather.slnx in Visual Studio (2026 version or later).
 1. Restore NuGet packages.
 1. Rebuild solution to restore all dependencies and ensure that the project is set up correctly.
 
-### Run
+## Run
 Run _WeatherAPI_ project
