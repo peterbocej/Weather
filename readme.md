@@ -10,7 +10,7 @@ making it ideal for developers who want to integrate weather data into their app
 The mission of this project is to provide accurate and up-to-date weather information 
 to users in a simple and efficient manner.
 
-[net-zadanie-2026.pdf](file:///net-zadanie-2026.pdf): in slovak language, contains the task description and requirements for the project.
+[net-zadanie-2026.pdf](./net-zadanie-2026.pdf): in slovak language, contains the task description and requirements for the project.
 
 ## Get
 To get the project, you can clone the repository from GitHub using the following command:
