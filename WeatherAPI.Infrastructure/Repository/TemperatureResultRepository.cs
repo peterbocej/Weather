@@ -5,7 +5,7 @@ using WeatherAPI.Infrastructure.Data;
 
 namespace WeatherAPI.Infrastructure.Repository
 {
-   public interface ITemperatureResultRepository
+   public interface ITemperatureResultRepository : IDisposable
    {
       Task<IEnumerable<TemperatureResult>> GetAllAsync();
       Task<TemperatureResult?> GetTemperatureResultAsync(int cityId);
@@ -48,6 +48,11 @@ namespace WeatherAPI.Infrastructure.Repository
       public EntityEntry<TemperatureResult> UpdateAsync(TemperatureResult temperatureResult)
       {
          return _context.TemperatureResults.Update(temperatureResult);
+      }
+
+      public void Dispose()
+      {
+         _context?.Dispose();
       }
    }
 }
