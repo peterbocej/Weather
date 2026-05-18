@@ -1,4 +1,8 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="net-zadanie-2026.pdf" />
+    <File Path="readme.md" />
+  </Folder>
   <Project Path="WeatherAPI.Applicatioin/WeatherAPI.Applicatioin.csproj" Id="ead05631-1b44-42ef-89a2-c1a8189f3896" />
   <Project Path="WeatherAPI.Domain/WeatherAPI.Domain.csproj" />
   <Project Path="WeatherAPI.Infrastructure/WeatherAPI.Infrastructure.csproj" />
