@@ -30,7 +30,7 @@ namespace WeatherAPI.Infrastructure.Repository
 
       public async Task<TemperatureResult?> GetTemperatureResultAsync(int cityId)
       {
-         return await _context.TemperatureResults.FirstOrDefaultAsync(t => t.TemperatureResultId == cityId);
+         return await _context.TemperatureResults.FindAsync(cityId);
       }
 
       public Task<int> SaveChangesAsync()
