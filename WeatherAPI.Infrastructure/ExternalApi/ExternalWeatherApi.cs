@@ -21,7 +21,7 @@ namespace WeatherAPI.Infrastructure.ExternalApi
       public async Task<bool> FetchTemperatureFromApiAsync(TemperatureResult temperatureResult)
       {
          var cityName = temperatureResult.City;
-         var requestUrl = string.Format(_settings.Server.Url, _settings.Server.ApiKey, cityName);
+         var requestUrl = string.Format(_settings.WeatherApiServer.Url, _settings.WeatherApiServer.ApiKey, cityName);
          using (var client = new HttpClient())
          {
             var response = await client.GetAsync(requestUrl);

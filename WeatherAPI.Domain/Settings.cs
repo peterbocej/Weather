@@ -6,17 +6,17 @@ namespace WeatherAPI.Domain
 {
    public class Settings
    {
-      public Server Server { get; set; }
+      public WeatherApiServer WeatherApiServer { get; set; }
       public Jwt Jwt { get; set; }
       public Cache Cache { get; set; }
       public City[] Cities { get; private set; }
 
       public Settings(IConfigurationSection configuration)
       {
-         Server = new Server
+         WeatherApiServer = new WeatherApiServer
          {
-            Url = configuration["Server:Url"] ?? string.Empty,
-            ApiKey = configuration["Server:ApiKey"] ?? string.Empty
+            Url = configuration["WeatherApiServer:Url"] ?? string.Empty,
+            ApiKey = configuration["WeatherApiServer:ApiKey"] ?? string.Empty
          };
          Jwt = new Jwt
          {
@@ -38,7 +38,7 @@ namespace WeatherAPI.Domain
       }
    }
 
-   public class Server
+   public class WeatherApiServer
    {
       public string Url { get; set; } = string.Empty;
       public string ApiKey { get; set; } = string.Empty;
