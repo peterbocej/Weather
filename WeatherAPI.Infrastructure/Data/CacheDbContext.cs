@@ -1,12 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WeatherAPI.Domain;
 using WeatherAPI.Domain.Models;
 
 namespace WeatherAPI.Infrastructure.Data
 {
    public class CacheDbContext : DbContext
    {
-      public CacheDbContext(DbContextOptions<CacheDbContext> options) : base(options)
+      private readonly Settings _settings;
+      public CacheDbContext(DbContextOptions<CacheDbContext> options, Settings settings) : base(options)
       {
+         _settings = settings;
       }
 
       public DbSet<TemperatureResult> TemperatureResults { get; set; }
@@ -20,10 +23,11 @@ namespace WeatherAPI.Infrastructure.Data
       private void SeedData(ModelBuilder modelBuilder)
       {
          modelBuilder.Entity<TemperatureResult>().HasData(
-            new TemperatureResult { TemperatureResultId = 1, City = "Bratislava" },
-            new TemperatureResult { TemperatureResultId = 2, City = "Praha" },
-            new TemperatureResult { TemperatureResultId = 3, City = "Budapest" },
-            new TemperatureResult { TemperatureResultId = 4, City = "Vienna" }
+            _settings.Cities.Select(c => new TemperatureResult
+            {
+               TemperatureResultId = c.Id,
+               City = c.Name
+            }).ToArray()
          );
       }
    }

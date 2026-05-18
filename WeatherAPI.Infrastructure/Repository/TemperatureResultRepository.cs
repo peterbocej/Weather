@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using WeatherAPI.Domain;
 using WeatherAPI.Domain.Models;
 using WeatherAPI.Infrastructure.Data;
 
@@ -15,19 +16,11 @@ namespace WeatherAPI.Infrastructure.Repository
    public class TemperatureResultRepository : ITemperatureResultRepository
    {
       private readonly CacheDbContext _context;
-      public TemperatureResultRepository(CacheDbContext context)
+      private readonly Settings _settings;
+      public TemperatureResultRepository(CacheDbContext context, Settings settings)
       {
          _context = context;
-         if (!_context.TemperatureResults.Any())
-         {
-            _context.TemperatureResults.AddRange(
-               new TemperatureResult { TemperatureResultId = 1, City = "Bratislava" },
-               new TemperatureResult { TemperatureResultId = 2, City = "Praha" },
-               new TemperatureResult { TemperatureResultId = 3, City = "Budapest" },
-               new TemperatureResult { TemperatureResultId = 4, City = "Vieden" }
-            );
-            _context.SaveChanges();
-         }
+         _settings = settings;
       }
 
       public async Task<IEnumerable<TemperatureResult>> GetAllAsync()

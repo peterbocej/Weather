@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System.Text.Json;
+using WeatherAPI.Domain;
 using WeatherAPI.Domain.Models;
 
 namespace WeatherAPI.Infrastructure.ExternalApi
@@ -11,21 +11,17 @@ namespace WeatherAPI.Infrastructure.ExternalApi
    }
    public class ExternalWeatherApi : IExternalWeatherApi
    {
-      private readonly IConfiguration _configuration;
+      private readonly Settings _settings;
       private readonly ILogger<ExternalWeatherApi> _logger;
-      private readonly string? _url;
-      private readonly string? _apiKey;
-      public ExternalWeatherApi(IConfiguration configuration, ILogger<ExternalWeatherApi> logger)
+      public ExternalWeatherApi(Settings settings, ILogger<ExternalWeatherApi> logger)
       {
-         _configuration = configuration;
+         _settings = settings;
          _logger = logger;
-         _url = _configuration["Server:Url"];
-         _apiKey = _configuration["Server:ApiKey"];
       }
       public async Task<bool> FetchTemperatureFromApiAsync(TemperatureResult temperatureResult)
       {
          var cityName = temperatureResult.City;
-         var requestUrl = string.Format(_url!, _apiKey, cityName);
+         var requestUrl = string.Format(_settings.Server.Url, _settings.Server.ApiKey, cityName);
          using (var client = new HttpClient())
          {
             var response = await client.GetAsync(requestUrl);

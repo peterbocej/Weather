@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using System.Text;
 using WeatherAPI.Application.Services;
+using WeatherAPI.Domain;
 using WeatherAPI.Infrastructure.Data;
 using WeatherAPI.Infrastructure.ExternalApi;
 using WeatherAPI.Infrastructure.Repository;
@@ -15,9 +16,21 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.Configure<IConfiguration>(builder.Configuration);
+var settings = new Settings(builder.Configuration.GetSection("AppSettings"));
+builder.Services.AddSingleton<Settings>(settings);
 builder.Services.AddLogging(o => o.AddConsole());
-builder.Services.AddDbContext<CacheDbContext>(options =>
-   options.UseSqlite(builder.Configuration.GetConnectionString("WeatherCache")), ServiceLifetime.Scoped);
+switch (settings.Cache.Mode)
+{
+   case CacheMode.None:
+   case CacheMode.Memory:
+      builder.Services.AddDbContext<CacheDbContext>(options =>
+         options.UseInMemoryDatabase("WeatherCache"), ServiceLifetime.Scoped);
+      break;
+   case CacheMode.Database:
+      builder.Services.AddDbContext<CacheDbContext>(options =>
+         options.UseSqlite(builder.Configuration.GetConnectionString("WeatherCache")), ServiceLifetime.Scoped);
+      break;
+}
 builder.Services.AddScoped<ITemperatureResultRepository, TemperatureResultRepository>();
 builder.Services.AddScoped<IExternalWeatherApi, ExternalWeatherApi>();
 builder.Services.AddScoped<IWeatherService, WeatherService>();
@@ -32,9 +45,9 @@ builder.Services.AddAuthentication("Bearer")
          ValidateAudience = true,
          ValidateLifetime = true,
          ValidateIssuerSigningKey = true,
-         ValidIssuer = jwtSettings["Issuer"],
-         ValidAudience = jwtSettings["Audience"],
-         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]!))
+         ValidIssuer = settings.Jwt.Issuer,
+         ValidAudience = settings.Jwt.Audience,
+         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.Jwt.Key))
       };
    });
 builder.Services.AddAuthorization();

@@ -5,6 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using WeatherAPI.Application.DTO;
+using WeatherAPI.Domain;
 
 namespace WeatherAPI.Controllers
 {
@@ -14,10 +15,12 @@ namespace WeatherAPI.Controllers
    public class AuthController : ControllerBase
    {
       private readonly IConfiguration _config;
+      private readonly Settings _settings;
       private readonly ILogger<AuthController> _logger;
-      public AuthController(IConfiguration config, ILogger<AuthController> logger)
+      public AuthController(IConfiguration config, Settings settings, ILogger<AuthController> logger)
       {
          _config = config;
+         _settings = settings;
          _logger = logger;
       }
 
@@ -81,12 +84,12 @@ namespace WeatherAPI.Controllers
             new Claim(ClaimTypes.Name, user),
             new Claim(ClaimTypes.Role, role ?? string.Empty)
          };
-         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Jwt.Key));
          var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
          var token = new JwtSecurityToken(
-             issuer: _config["Jwt:Issuer"],
-             audience: _config["Jwt:Audience"],
+             issuer: _settings.Jwt.Issuer,
+             audience: _settings.Jwt.Audience,
              claims: claims,
              expires: DateTime.Now.AddHours(1),
              signingCredentials: creds

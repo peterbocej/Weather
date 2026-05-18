@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using WeatherAPI.Domain;
 using WeatherAPI.Domain.Models;
 using WeatherAPI.Infrastructure.ExternalApi;
 using WeatherAPI.Infrastructure.Repository;
@@ -13,15 +14,18 @@ namespace WeatherAPI.Application.Services
    {
       private readonly ITemperatureResultRepository _temperatureResultRepository;
       private readonly IExternalWeatherApi _externalWeatherApi;
+      private readonly Settings _settings;
       private readonly ILogger<WeatherService> _logger;
       public WeatherService(
          ITemperatureResultRepository temperatureResultRepository,
          ILogger<WeatherService> logger,
-         IExternalWeatherApi externalWeatherApi)
+         IExternalWeatherApi externalWeatherApi,
+         Settings settings)
       {
          _temperatureResultRepository = temperatureResultRepository;
          _logger = logger;
          _externalWeatherApi = externalWeatherApi;
+         _settings = settings;
       }
       public async Task<TemperatureResult> GetTemperatureAsync(int cityId)
       {
@@ -39,8 +43,11 @@ namespace WeatherAPI.Application.Services
          {
             if (await _externalWeatherApi.FetchTemperatureFromApiAsync(temperatureResult))
             {
-               _temperatureResultRepository.UpdateAsync(temperatureResult);
-               await _temperatureResultRepository.SaveChangesAsync();
+               if (_settings.Cache.Mode != CacheMode.None)
+               {
+                  _temperatureResultRepository.UpdateAsync(temperatureResult);
+                  await _temperatureResultRepository.SaveChangesAsync();
+               }
                return temperatureResult;
             }
             else
