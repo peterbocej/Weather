@@ -6,5 +6,5 @@
   <Project Path="WeatherAPI.Applicatioin/WeatherAPI.Applicatioin.csproj" Id="ead05631-1b44-42ef-89a2-c1a8189f3896" />
   <Project Path="WeatherAPI.Domain/WeatherAPI.Domain.csproj" />
   <Project Path="WeatherAPI.Infrastructure/WeatherAPI.Infrastructure.csproj" />
-  <Project Path="WeatherAPI/WeatherAPI.csproj" />
+  <Project Path="WeatherAPI/WeatherAPI.csproj" Id="36745925-c0c1-4cb7-b963-5edf8f814f8f" />
 </Solution>
