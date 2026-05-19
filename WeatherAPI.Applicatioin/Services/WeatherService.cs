@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using WeatherAPI.Domain;
+using WeatherAPI.Domain.Exceptions;
 using WeatherAPI.Domain.Models;
 using WeatherAPI.Infrastructure.ExternalApi;
 using WeatherAPI.Infrastructure.Repository;
@@ -33,7 +34,7 @@ namespace WeatherAPI.Application.Services
          if (temperatureResult == null)
          {
             _logger.LogError("Invalid city ID: {CityId}", cityId);
-            throw new ArgumentOutOfRangeException(nameof(cityId), "Invalid city ID (1 - 4).");
+            throw new NotFoundException($"City not found for ID: {cityId}");
          }
          if (CheckTemperatureCache(temperatureResult))
          {

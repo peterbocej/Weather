@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 using WeatherAPI.Application.Services;
+using WeatherAPI.Domain.Exceptions;
 
 namespace WeatherAPI.Controllers
 {
@@ -36,6 +37,11 @@ namespace WeatherAPI.Controllers
                Temperature = result.TemperatureC.Value,
                MeasuredAtUtc = result.MeasuredAtUTC.Value.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture)
             });
+         }
+         catch (NotFoundException ex)
+         {
+            _logger.LogWarning(ex, "City not found for cityId {CityId}", cityId);
+            return NotFound(ex.FullMessage);
          }
          catch (Exception ex)
          {
