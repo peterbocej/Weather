@@ -12,8 +12,6 @@ namespace Weather.Domain.Models.Security
       [EmailAddress]
       public string UserEmail { get; set; } = string.Empty;
       public string Password { get; set; } = string.Empty;
-      public Role Role { get; set; } = Role.None;
-      [NotMapped]
-      public string RoleName { get => Role.ToString(); }
+      public string Role { get; set; } = "User"; // "User", "Administrator"
    }
 }

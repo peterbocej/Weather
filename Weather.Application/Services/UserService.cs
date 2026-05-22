@@ -17,6 +17,7 @@ namespace WebApi8.Services
       Task<bool> ValidateUser(string username, string password);
       Task<string> Login(Login login);
       Task<User> GetUserByUsername(string username);
+      Task<IEnumerable<User>> GetAllUsers();
    }
    public class UserService : IUserService
    {
@@ -167,6 +168,11 @@ namespace WebApi8.Services
          if (user == null)
             throw new KeyNotFoundException("User not found");
          return user;
+      }
+
+      public async Task<IEnumerable<User>> GetAllUsers()
+      {
+         return await _usersRepository.GetAllAsync();
       }
    }
 }
