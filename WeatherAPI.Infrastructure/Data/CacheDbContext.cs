@@ -25,7 +25,7 @@ namespace WeatherAPI.Infrastructure.Data
          modelBuilder.Entity<TemperatureResult>().HasData(
             _settings.Cities.Select(c => new TemperatureResult
             {
-               TemperatureResultId = c.Id,
+               Id = c.Id,
                City = c.Name
             }).ToArray()
          );

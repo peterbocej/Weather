@@ -18,11 +18,16 @@ internal class Program
       // Add services to the container.
 
       builder.Services.AddControllers();
+      // configure strongly typed settings objects
       builder.Services.Configure<IConfiguration>(builder.Configuration);
       var appSettings = new AppSettings();
       builder.Configuration.GetSection("AppSettings").Bind(appSettings);
       builder.Services.AddSingleton(appSettings);
+      // logging
       builder.Services.AddLogging(o => o.AddConsole());
+      // database contexts
+      builder.Services.AddDbContext<SecurityDbContext>(options =>
+         options.UseSqlite(builder.Configuration.GetConnectionString("Security")), ServiceLifetime.Scoped);
       switch (appSettings.Cache.Mode)
       {
          case CacheMode.None:
@@ -35,18 +40,21 @@ internal class Program
                options.UseSqlite(builder.Configuration.GetConnectionString("WeatherCache")), ServiceLifetime.Scoped);
             break;
       }
+      // weather repositories and services
       builder.Services.AddScoped<ITemperatureResultRepository, TemperatureResultRepository>();
       builder.Services.AddScoped<IExternalWeatherApi, ExternalWeatherApi>();
       builder.Services.AddScoped<IWeatherService, WeatherService>();
-
+      // authentication and swagger
       SetupSecurity(builder, appSettings);
 
       var app = builder.Build();
 
       using (var scope = app.Services.CreateScope())
       {
-         var dbContext = scope.ServiceProvider.GetRequiredService<CacheDbContext>();
-         dbContext.Database.EnsureCreated();
+         var cashContext = scope.ServiceProvider.GetRequiredService<CacheDbContext>();
+         cashContext.Database.EnsureCreated();
+         var securityContext = scope.ServiceProvider.GetRequiredService<SecurityDbContext>();
+         securityContext.Database.EnsureCreated();
       }
 
       // Configure the HTTP request pipeline.
@@ -69,64 +77,59 @@ internal class Program
    private static void SetupSecurity(WebApplicationBuilder builder, AppSettings appSettings)
    {
       // Add authentication services
-      builder.Services.AddAuthentication(options =>
-      {
-         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-      })
-      .AddJwtBearer(options =>
-      {
-         options.TokenValidationParameters = new TokenValidationParameters
+      builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+         .AddJwtBearer(options =>
          {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = appSettings.Jwt.Issuer,
-            ValidAudience = appSettings.Jwt.Audience,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.Jwt.Key))
-         };
-         options.Events = new JwtBearerEvents
-         {
-            OnAuthenticationFailed = context =>
+            options.RequireHttpsMetadata = true;
+            options.SaveToken = true;
+            options.TokenValidationParameters = new TokenValidationParameters
             {
-               var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
-               logger.LogError(context.Exception, "Authentication failed: {message}", context.Exception.Message);
-               return Task.CompletedTask;
-            }
-         };
-      });
-      builder.Services.AddAuthorization();
+               ValidateIssuer = true,
+               ValidIssuer = appSettings.Jwt.Issuer,
+               ValidateAudience = true,
+               ValidAudience = appSettings.Jwt.Audience,
+               ValidateIssuerSigningKey = true,
+               IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.Jwt.Key)),
+               ValidateLifetime = true
+            };
+            options.Events = new JwtBearerEvents
+            {
+               OnAuthenticationFailed = context =>
+               {
+                  ILogger logger = LoggerFactory.Create(config => config.AddConsole())
+                     .CreateLogger("Program");
+                  logger.LogError(context.Exception, "Authentication failed.");
+                  return Task.CompletedTask;
+               }
+            };
+         });
 
-      builder.Services.AddEndpointsApiExplorer();
-      builder.Services.AddSwaggerGen(c =>
+
+      builder.Services.AddSwaggerGen(options =>
       {
-         c.SwaggerDoc("v1", new OpenApiInfo { Title = "WeatherAPI", Version = "v1" });
-
-         // Add JWT Bearer definition
-         c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+         // Add JWT bearer definition to Swagger
+         options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
          {
             Name = "Authorization",
             Type = SecuritySchemeType.Http,
             Scheme = "bearer",
             BearerFormat = "JWT",
             In = ParameterLocation.Header,
-            Description = "Enter 'Bearer' [space] and then your valid token.\nExample: Bearer eyJhbGciOiJIUzI1NiIs...",
+            Description = "Enter 'Bearer {token}'"
          });
 
-         // Apply JWT Bearer globally
-         c.AddSecurityRequirement(new OpenApiSecurityRequirement
+         options.AddSecurityRequirement(new OpenApiSecurityRequirement
          {
             {
                new OpenApiSecurityScheme
                {
-                  Reference = new OpenApiReference
-                  {
-                     Type = ReferenceType.SecurityScheme,
-                     Id = "Bearer"
+                  Reference = new OpenApiReference 
+                  { 
+                     Type = ReferenceType.SecurityScheme, 
+                     Id = "Bearer" 
                   }
                },
-               Array.Empty<string>()
+               new string[] { }
             }
          });
       });

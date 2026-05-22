@@ -6,46 +6,10 @@ using WeatherAPI.Infrastructure.Data;
 
 namespace WeatherAPI.Infrastructure.Repository
 {
-   public interface ITemperatureResultRepository : IDisposable
+   public interface ITemperatureResultRepository : IBaseRepository<TemperatureResult>
    {
-      Task<IEnumerable<TemperatureResult>> GetAllAsync();
-      Task<TemperatureResult?> GetTemperatureResultAsync(int cityId);
-      EntityEntry<TemperatureResult> UpdateAsync(TemperatureResult temperatureResult);
-      Task<int> SaveChangesAsync();
    }
-   public class TemperatureResultRepository : ITemperatureResultRepository
+   public class TemperatureResultRepository(CacheDbContext context) : BaseRepository<TemperatureResult>(context), ITemperatureResultRepository
    {
-      private readonly CacheDbContext _context;
-      private readonly AppSettings _settings;
-      public TemperatureResultRepository(CacheDbContext context, AppSettings settings)
-      {
-         _context = context;
-         _settings = settings;
-      }
-
-      public async Task<IEnumerable<TemperatureResult>> GetAllAsync()
-      {
-         return await _context.TemperatureResults.ToArrayAsync();
-      }
-
-      public async Task<TemperatureResult?> GetTemperatureResultAsync(int cityId)
-      {
-         return await _context.TemperatureResults.FindAsync(cityId);
-      }
-
-      public Task<int> SaveChangesAsync()
-      {
-         return _context.SaveChangesAsync();
-      }
-
-      public EntityEntry<TemperatureResult> UpdateAsync(TemperatureResult temperatureResult)
-      {
-         return _context.TemperatureResults.Update(temperatureResult);
-      }
-
-      public void Dispose()
-      {
-         _context?.Dispose();
-      }
    }
 }

@@ -30,7 +30,7 @@ namespace WeatherAPI.Application.Services
       }
       public async Task<TemperatureResult> GetTemperatureAsync(int cityId)
       {
-         var temperatureResult = await _temperatureResultRepository.GetTemperatureResultAsync(cityId);
+         var temperatureResult = await _temperatureResultRepository.GetByIdAsync(cityId);
          if (temperatureResult == null)
          {
             _logger.LogError("Invalid city ID: {CityId}", cityId);
@@ -46,8 +46,8 @@ namespace WeatherAPI.Application.Services
             {
                if (_settings.Cache.Mode != CacheMode.None)
                {
-                  _temperatureResultRepository.UpdateAsync(temperatureResult);
-                  await _temperatureResultRepository.SaveChangesAsync();
+                  await _temperatureResultRepository.UpdateAsync(temperatureResult);
+                  await _temperatureResultRepository.SaveAsync(null);
                }
                return temperatureResult;
             }
