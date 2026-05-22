@@ -11,9 +11,9 @@ namespace WeatherAPI.Infrastructure.ExternalApi
    }
    public class ExternalWeatherApi : IExternalWeatherApi
    {
-      private readonly Settings _settings;
+      private readonly AppSettings _settings;
       private readonly ILogger<ExternalWeatherApi> _logger;
-      public ExternalWeatherApi(Settings settings, ILogger<ExternalWeatherApi> logger)
+      public ExternalWeatherApi(AppSettings settings, ILogger<ExternalWeatherApi> logger)
       {
          _settings = settings;
          _logger = logger;

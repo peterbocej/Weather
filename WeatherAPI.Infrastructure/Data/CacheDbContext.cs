@@ -6,8 +6,8 @@ namespace WeatherAPI.Infrastructure.Data
 {
    public class CacheDbContext : DbContext
    {
-      private readonly Settings _settings;
-      public CacheDbContext(DbContextOptions<CacheDbContext> options, Settings settings) : base(options)
+      private readonly AppSettings _settings;
+      public CacheDbContext(DbContextOptions<CacheDbContext> options, AppSettings settings) : base(options)
       {
          _settings = settings;
       }

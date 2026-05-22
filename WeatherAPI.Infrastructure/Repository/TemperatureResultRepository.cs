@@ -16,8 +16,8 @@ namespace WeatherAPI.Infrastructure.Repository
    public class TemperatureResultRepository : ITemperatureResultRepository
    {
       private readonly CacheDbContext _context;
-      private readonly Settings _settings;
-      public TemperatureResultRepository(CacheDbContext context, Settings settings)
+      private readonly AppSettings _settings;
+      public TemperatureResultRepository(CacheDbContext context, AppSettings settings)
       {
          _context = context;
          _settings = settings;

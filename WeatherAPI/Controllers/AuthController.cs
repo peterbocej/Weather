@@ -15,9 +15,9 @@ namespace WeatherAPI.Controllers
    public class AuthController : ControllerBase
    {
       private readonly IConfiguration _config;
-      private readonly Settings _settings;
+      private readonly AppSettings _settings;
       private readonly ILogger<AuthController> _logger;
-      public AuthController(IConfiguration config, Settings settings, ILogger<AuthController> logger)
+      public AuthController(IConfiguration config, AppSettings settings, ILogger<AuthController> logger)
       {
          _config = config;
          _settings = settings;

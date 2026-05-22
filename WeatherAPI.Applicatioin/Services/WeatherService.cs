@@ -15,13 +15,13 @@ namespace WeatherAPI.Application.Services
    {
       private readonly ITemperatureResultRepository _temperatureResultRepository;
       private readonly IExternalWeatherApi _externalWeatherApi;
-      private readonly Settings _settings;
+      private readonly AppSettings _settings;
       private readonly ILogger<WeatherService> _logger;
       public WeatherService(
          ITemperatureResultRepository temperatureResultRepository,
          ILogger<WeatherService> logger,
          IExternalWeatherApi externalWeatherApi,
-         Settings settings)
+         AppSettings settings)
       {
          _temperatureResultRepository = temperatureResultRepository;
          _logger = logger;
