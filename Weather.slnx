@@ -4,8 +4,8 @@
     <File Path="net-zadanie-2026.pdf" />
     <File Path="readme.md" />
   </Folder>
-  <Project Path="WeatherAPI.Applicatioin/WeatherAPI.Applicatioin.csproj" Id="ead05631-1b44-42ef-89a2-c1a8189f3896" />
-  <Project Path="WeatherAPI.Domain/WeatherAPI.Domain.csproj" />
-  <Project Path="WeatherAPI.Infrastructure/WeatherAPI.Infrastructure.csproj" />
-  <Project Path="WeatherAPI/WeatherAPI.csproj" Id="36745925-c0c1-4cb7-b963-5edf8f814f8f" />
+  <Project Path="Weather.Api/Weather.Api.csproj" Id="664b3c15-ffa6-411e-9c7a-46cca80da892" />
+  <Project Path="Weather.Application/Weather.Application.csproj" Id="c49de8c7-0487-45bb-b72f-e27ceaf949d9" />
+  <Project Path="Weather.Domain/Weather.Domain.csproj" Id="9e052ebc-9396-4d60-8cc9-4c886d4f9faa" />
+  <Project Path="Weather.Infrastructure/Weather.Infrastructure.csproj" Id="062c1ac0-91f6-4083-9ae0-73298d587129" />
 </Solution>

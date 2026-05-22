@@ -20,13 +20,13 @@ git clone https://github.com/peterbocej/Weather.git
 ```
 ## Solution items
 ![Solution projects](./img/solution.png)
-* #### WeatherAPI
+* #### Weather.API
 This is the main project of the solution, which contains the API implementation.
-* #### WeatherAPI.Application
+* #### Weather.Application
 This project contains the application logic and services used by the API.
-* #### WeatherAPI.Domain
+* #### Weather.Domain
 This project contains the domain models and entities used in the application.
-* #### WeatherAPI.Infrastructure
+* #### Weather.Infrastructure
 This project contains the infrastructure code, such as database access and external API integrations.
 ## Prepare
 To prepare the project for development, you need to have .NET 10.0 SDK installed on your machine.
@@ -36,4 +36,4 @@ To prepare the project for development, you need to have .NET 10.0 SDK installed
 1. Rebuild solution to restore all dependencies and ensure that the project is set up correctly.
 
 ## Run
-Run _WeatherAPI_ project
+Run _Weather.API_ project
