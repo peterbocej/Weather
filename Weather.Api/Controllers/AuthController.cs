@@ -67,7 +67,7 @@ namespace Weather.Controllers
          try
          {
             var user = await _userService.GetUserByUsername(User.Identity?.Name!);
-            return Ok(new 
+            return Ok(new
             {
                user.Id,
                user.UserName,
@@ -88,11 +88,11 @@ namespace Weather.Controllers
          try
          {
             var users = await _userService.GetAllUsers();
-            return Ok(users.Select(u => new 
-            { 
-               u.Id, 
-               u.UserName, 
-               u.UserEmail, 
+            return Ok(users.Select(u => new
+            {
+               u.Id,
+               u.UserName,
+               u.UserEmail,
                u.Role
             }));
          }

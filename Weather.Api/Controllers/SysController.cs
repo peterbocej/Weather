@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
+using Weather.Domain.Extensions;
 using Weather.Infrastructure.Repository;
 
 namespace Weather.Controllers
@@ -47,7 +48,24 @@ namespace Weather.Controllers
          }
          catch (Exception ex)
          {
-            return BadRequest(ex.Message);
+            return BadRequest(ex.GetFullMessage());
+         }
+      }
+      [HttpGet("host")]
+      public async Task<IActionResult> Host()
+      {
+         try
+         {
+            return Ok(await Task.FromResult(new
+            {
+               Scheme = HttpContext.Request.Scheme,
+               Host = HttpContext.Request.Host.Value,
+               Path = HttpContext.Request.Path.Value,
+            }));
+         }
+         catch (Exception ex)
+         {
+            return BadRequest(ex.GetFullMessage());
          }
       }
    }
