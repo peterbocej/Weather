@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
     <File Path="net-zadanie-2026.pdf" />
     <File Path="readme.md" />
   </Folder>
