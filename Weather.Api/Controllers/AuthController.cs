@@ -46,8 +46,8 @@ namespace Weather.Controllers
             return BadRequest(ex.GetFullMessage());
          }
       }
-      [HttpPost("validate")]
-      public async Task<IActionResult> Validate([FromBody] string token)
+      [HttpPost("validate-token")]
+      public async Task<IActionResult> ValidateToken([FromBody] string token)
       {
          try
          {
@@ -67,11 +67,38 @@ namespace Weather.Controllers
          try
          {
             var user = await _userService.GetUserByUsername(User.Identity?.Name!);
-            return Ok(user);
+            return Ok(new 
+            {
+               user.Id,
+               user.UserName,
+               user.UserEmail,
+               user.Role
+            });
          }
          catch (Exception ex)
          {
             _logger.LogError(ex, "Error fetching user {Username}", User.Identity?.Name);
+            return BadRequest(ex.GetFullMessage());
+         }
+      }
+      [HttpGet("users")]
+      [Authorize(Roles = "Administrator")]
+      public async Task<IActionResult> GetUsers()
+      {
+         try
+         {
+            var users = await _userService.GetAllUsers();
+            return Ok(users.Select(u => new 
+            { 
+               u.Id, 
+               u.UserName, 
+               u.UserEmail, 
+               u.Role
+            }));
+         }
+         catch (Exception ex)
+         {
+            _logger.LogError(ex, "Error fetching users");
             return BadRequest(ex.GetFullMessage());
          }
       }
