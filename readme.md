@@ -16,7 +16,7 @@ to users in a simple and efficient manner.
 ## Get
 To get the project, you can clone the repository from GitHub using the following command:
 ```bash
-git clone https://github.com/peterbocej/Weather.git
+git clone https://github.com/peterbocej/Weather/tree/DownTo_Net8
 ```
 ## Solution items
 ![Solution projects](./img/solution.png)
@@ -44,4 +44,4 @@ To prepare the project for development, you need to have .NET 8.0 SDK installed 
 - Register new user by sending a POST request to _/api/auth/register_ endpoint with the required user details in the request body. Use role _User_ or _Administrator_.
 - Authenticate by sending a POST request to _/api/auth/login_ endpoint with the user credentials in the request body.
 - Use response from the login endpoint to obtain a JWT token, which will be used for authenticated requests to the API.
-- Get weather information for a city by sending a GET request to _/api/temperature/{cityId}_ endpoint, replacing {city} with the number of the desired city. Include the JWT token in the Authorization header of the request.
+- Get weather information for a city by sending a GET request to _/api/temperature/cityId_ endpoint, replacing cityId with the number of the desired city. Include the JWT token in the Authorization header of the request.
