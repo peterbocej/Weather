@@ -16,7 +16,7 @@ to users in a simple and efficient manner.
 ## Get
 To get the project, you can clone the repository from GitHub using the following command:
 ```bash
-git clone https://github.com/peterbocej/Weather/tree/DownTo_Net8
+git clone https://github.com/peterbocej/Weather.git
 ```
 ## Solution items
 ![Solution projects](./img/solution.png)
