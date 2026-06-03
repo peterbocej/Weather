@@ -1,0 +1,9 @@
+services:
+  weather.api:
+    image: weatherapi:latest
+    build:
+      context: .
+      dockerfile: Weather.Api/Dockerfile
+    ports:
+      - 56565:8080
+      - 56566:8081

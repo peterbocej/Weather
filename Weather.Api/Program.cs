@@ -50,9 +50,23 @@ internal class Program
       builder.Services.AddScoped<IUserService, UserService>();
       SetupSecurity(builder, appSettings);
 
-      builder.WebHost.ConfigureKestrel(options =>
+      //builder.WebHost.ConfigureKestrel(options =>
+      //{
+      //   options.ListenAnyIP(7777);
+      //   options.ListenAnyIP(7778, listenOptions =>
+      //   {
+      //      listenOptions.UseHttps("weatherapi.pfx", "asdfPwd");
+      //   });
+      //});
+
+      builder.Services.AddCors(options =>
       {
-         options.ListenAnyIP(7778, configure => configure.UseHttps());
+         options.AddDefaultPolicy(builder =>
+         {
+            builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+         });
       });
 
       var app = builder.Build();
@@ -65,6 +79,12 @@ internal class Program
          securityContext.Database.EnsureCreated();
       }
 
+      app.UseCors(conf =>
+      {
+         conf.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+      });
       app.UseSwagger();
       app.UseSwaggerUI();
 
