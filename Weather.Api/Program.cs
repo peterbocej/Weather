@@ -50,6 +50,11 @@ internal class Program
       builder.Services.AddScoped<IUserService, UserService>();
       SetupSecurity(builder, appSettings);
 
+      builder.WebHost.ConfigureKestrel(options =>
+      {
+         options.ListenAnyIP(7778, configure => configure.UseHttps());
+      });
+
       var app = builder.Build();
 
       using (var scope = app.Services.CreateScope())
@@ -60,12 +65,8 @@ internal class Program
          securityContext.Database.EnsureCreated();
       }
 
-      // Configure the HTTP request pipeline.
-      if (app.Environment.IsDevelopment())
-      {
-         app.UseSwagger();
-         app.UseSwaggerUI();
-      }
+      app.UseSwagger();
+      app.UseSwaggerUI();
 
       app.UseHttpsRedirection();
 

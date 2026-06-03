@@ -1,6 +1,6 @@
 <Solution>
-  <Folder Name="/Solution Items/">
-    <File Path=".gitignore" />
+  <Folder Name="/Solution Items/" />
+  <Folder Name="/Solution Items/Doc/">
     <File Path="net-zadanie-2026.pdf" />
     <File Path="readme.md" />
   </Folder>
@@ -9,6 +9,9 @@
     <File Path="Dockerfile" />
     <File Path="DockRun.cmd" />
     <File Path="DockStop.cmd" />
+  </Folder>
+  <Folder Name="/Solution Items/Git/">
+    <File Path=".gitignore" />
   </Folder>
   <Project Path="Weather.Api/Weather.Api.csproj" Id="664b3c15-ffa6-411e-9c7a-46cca80da892" />
   <Project Path="Weather.Application/Weather.Application.csproj" Id="c49de8c7-0487-45bb-b72f-e27ceaf949d9" />
