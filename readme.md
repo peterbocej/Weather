@@ -39,15 +39,11 @@ To prepare the project for development, you need to have .NET 8.0 SDK installed 
 
 ## Setup
 1. Register for a free API key at [Weather API](https://www.weatherapi.com/) to access weather data.
-2. In _appsettings.json_ file of the Weather.API project, replace the placeholder YOUR_API_KEY in _AppSettings->WeatherApiServer->ApiKey_ with your actual API key.
+2. In _appsettings.json_ file of the Weather.API project, replace the placeholder YOUR_API_KEY in _AppSettings->WeatherApiServer->ApiKey_ with your actual Weather API key.
 3. In _appsettings.json_ file of the Weather.API project, replace the placeholder JWT_KEY in _AppSettings->Jwt->Key_ with a secure key of your choice for JWT authentication.
 4. Set _AppSettings->Cache->Mode_ to "None", "Memory", or "Database" based on your preference.
 ## Run Locally
-1. Run _Weather.API_ project (with http, https or Container settings) to start the API server.
-2. Register new user by sending a POST request to _/api/auth/register_ endpoint with the required user details in the request body. Use role _User_ or _Administrator_.
-3. Authenticate by sending a POST request to _/api/auth/login_ endpoint with the user credentials in the request body.
-4. Use response from the login endpoint to obtain a JWT token, which will be used for authenticated requests to the API.
-5. Get weather information for a city by sending a GET request to _/api/temperature/cityId_ endpoint, replacing cityId with the number of the desired city. Include the JWT token in the Authorization header of the request.
+Run _Weather.API_ project (with http, https or Container settings) to start the API server.
 ## Run with Docker
 1. Go to the root directory of the project in the terminal.
 2. Compose project into a Docker container by running the following command in the terminal from the root directory of the project:
@@ -55,4 +51,9 @@ To prepare the project for development, you need to have .NET 8.0 SDK installed 
 docker compose up --build
 ```
 3. Goto [https://localhost:56566/swagger](https://localhost:56566/swagger) in your web browser to access the Swagger UI for the API.
-4. Follow steps 2-5 from the "Run Locally" section to interact with the API using the Docker container.
+4. Follow steps 2-5 from the **_Interact with the API using Swagger UI_** section to interact with the API using the Docker container.
+## Interact with the API
+1. Register new user by _api/Auth/register_. Use role *User* or _Administrator_.
+2. Authenticate by sending a POST request to _/api/auth/login_ endpoint with the user credentials in the request body.
+3. Use response from the login endpoint to obtain a JWT token, which will be used for authenticated requests to the API.
+4. Get weather information for a city by sending a GET request to _/api/temperature/cityId_ endpoint, replacing cityId with the number of the desired city. Include the JWT token in the Authorization header of the request.
