@@ -39,8 +39,8 @@ To prepare the project for development, you need to have .NET 8.0 SDK installed 
 
 ## Setup
 1. Register for a free API key at [Weather API](https://www.weatherapi.com/) to access weather data.
-2. In _appsettings.json_ file of the Weather.API project, replace the placeholder YOUR_API_KEY in _AppSettings->WeatherApiServer->ApiKey_ with your actual Weather API key.
-3. In _appsettings.json_ file of the Weather.API project, replace the placeholder JWT_KEY in _AppSettings->Jwt->Key_ with a secure key of your choice for JWT authentication.
+2. In _appsettings.json_ file of the Weather.API project, replace the placeholder API_KEY in _AppSettings->WeatherApiServer->ApiKey_ with your actual Weather API key.
+3. In _appsettings.json_ file of the Weather.API project, replace the placeholder SECRET_KEY in _AppSettings->Jwt->Key_ with a secure key of your choice for JWT authentication.
 4. Set _AppSettings->Cache->Mode_ to "None", "Memory", or "Database" based on your preference.
 ## Run Locally
 Run _Weather.API_ project (with http, https or Container settings) to start the API server.
