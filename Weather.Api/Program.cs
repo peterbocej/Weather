@@ -52,8 +52,8 @@ internal class Program
 
       //builder.WebHost.ConfigureKestrel(options =>
       //{
-      //   options.ListenAnyIP(7777);
-      //   options.ListenAnyIP(7778, listenOptions =>
+      //   options.ListenAnyIP(8080);
+      //   options.ListenAnyIP(8081, listenOptions =>
       //   {
       //      listenOptions.UseHttps("weatherapi.pfx", "asdfPwd");
       //   });

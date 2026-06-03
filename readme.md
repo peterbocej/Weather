@@ -33,9 +33,15 @@ This project contains the infrastructure code, such as database access and exter
 ## Prepare
 To prepare the project for development, you need to have .NET 8.0 SDK installed on your machine.
 
-1. Open Weather.slnx in Visual Studio.
-2. Restore NuGet packages.
-3. Rebuild solution to restore all dependencies and ensure that the project is set up correctly.
+1. Goto the root directory of the project in the terminal and run the following command to restore NuGet packages and build the solution:
+1. 1. Restore NuGet packages.
+```
+dotnet restore .\Weather.slnx
+```
+2. Build the solution.
+```
+dotnet build .\Weather.slnx
+```
 
 ## Setup
 1. Register for a free API key at [Weather API](https://www.weatherapi.com/) to access weather data.
@@ -43,7 +49,11 @@ To prepare the project for development, you need to have .NET 8.0 SDK installed 
 3. In _appsettings.json_ file of the Weather.API project, replace the placeholder SECRET_KEY in _AppSettings->Jwt->Key_ with a secure key of your choice for JWT authentication.
 4. Set _AppSettings->Cache->Mode_ to "None", "Memory", or "Database" based on your preference.
 ## Run Locally
-Run _Weather.API_ project (with http, https or Container settings) to start the API server.
+1.Run _Weather.API_ project (with http, https or Container settings) to start the API server.
+```
+dotnet run --project .\Weather.API\Weather.API.csproj
+```
+2. Goto [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html) in your web browser to access the Swagger UI for the API.
 ## Run with Docker
 1. Go to the root directory of the project in the terminal.
 2. Compose project into a Docker container by running the following command in the terminal from the root directory of the project:
