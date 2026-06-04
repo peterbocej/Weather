@@ -24,7 +24,6 @@
 **/*.db*
 LICENSE
 README.md
-**/appsettings.Development.json
 !**/.gitignore
 !.git/HEAD
 !.git/config
