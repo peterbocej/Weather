@@ -50,14 +50,14 @@ internal class Program
       builder.Services.AddScoped<IUserService, UserService>();
       SetupSecurity(builder, appSettings);
 
-      //builder.WebHost.ConfigureKestrel(options =>
-      //{
-      //   options.ListenAnyIP(8080);
-      //   options.ListenAnyIP(8081, listenOptions =>
-      //   {
-      //      listenOptions.UseHttps("weatherapi.pfx", "asdfPwd");
-      //   });
-      //});
+      builder.WebHost.ConfigureKestrel(options =>
+      {
+         options.ListenAnyIP(8080);
+         options.ListenAnyIP(8081, listenOptions =>
+         {
+            listenOptions.UseHttps("weatherapi.pfx", "asdfPwd");
+         });
+      });
 
       builder.Services.AddCors(options =>
       {
