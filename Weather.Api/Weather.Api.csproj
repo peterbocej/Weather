@@ -36,9 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Weather.Api.pfx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="weatherapi.pfx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
